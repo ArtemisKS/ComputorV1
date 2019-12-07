@@ -10,13 +10,13 @@ import Foundation
 
 class ComputorV1 {
  
-  var argsArr: [String]!
-  var currentArgInd = 0
-  var currentArg = ""
-  let digitsStr = "0123456789"
+  private var argsArr: [String]!
+  private var currentArgInd = 0
+  private var currentArg = ""
+  private let digitsStr = "0123456789"
   private lazy var allowedChars = "+-=*^\(digitsStr)x. "
-  var badChars = ""
-  var polynom: Polynom!
+  private var badChars = ""
+  private var polynom: Polynom!
   
   enum Coefs: Int, CaseIterable {
     case a = 2, b = 1, c = 0
@@ -212,15 +212,6 @@ class ComputorV1 {
       if tokens.joined() == "0" && parsedToken.polynomPiece.contains("*0") { return PolynomValue() }
       
       let coef = getCoef(from: tokens)
-  //    print("parsedToken: \(parsedToken)")
-  //    print("tokens: \(tokens), pow: \(pow), coef: \(coef)")
-  //    if tokens.count == 1 && pow == "0" {
-  //      let power = coef//String(parsedToken.polynomPiece.last!)
-  //      if tokens.joined() == "0" &&
-  //        parsedToken.polynomPiece.contains("*0") { return PolynomValue() }
-  //      else if pow == power { coef = "1" }
-  //      else { pow = "1" }
-  //    }
       let coefVal = parsedToken.positive ? coef : -coef
       
   //    print("tokens: \(tokens), pow: \(pow), coef: \(coefInt)")
@@ -299,7 +290,6 @@ class ComputorV1 {
       }
     }
     
-  //  print("polynom: \(polynom)")
     return polynom
   }
 
@@ -445,54 +435,6 @@ class ComputorV1 {
   }
 
 }
-
-extension Double {
-  
-  var getIntValue: Int? {
-    
-    return isRound ? Int(self) : nil
-  }
-  
-  var isRound: Bool {
-    return rounded() == self
-  }
-  
-  var toString: String {
-    return isRound ? "\(Int(self))" : "\(Double((1000*self).rounded())/1000)"
-  }
-}
-
-extension String {
-  
-  func nextChar(to ind: String.Index) -> Character? {
-    let lIndex = index(after: ind)
-    return lIndex < endIndex ? self[lIndex] : nil
-  }
-  
-  func prevChar(to ind: String.Index) -> Character? {
-    guard ind > startIndex else { return nil }
-    return self[index(before: ind)]
-  }
-  
-  func trim() -> String {
-    return self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-  }
-  
-  subscript (i: Int) -> Character
-  {
-    get {
-      let index = self.index(startIndex, offsetBy: i)
-      return self[index]
-    }
-  }
-  
-}
-
-extension String.Index {
-  
-  func distance<S: StringProtocol>(in string: S) -> Int { string.distance(from: string.startIndex, to: self) }
-}
-
 
 func main() {
   ComputorV1().parseArgs()
