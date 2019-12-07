@@ -27,7 +27,8 @@ class ComputorV1 {
   }
 
   enum ProcessingError: Error {
-    case emptyInput, noX, noEqualitySign, floatingPoint, badSymbols, wrongSyntax, noRoots, unknownError
+    case emptyInput, noX, noEqualitySign, manyEqualitySigns,
+    floatingPoint, badSymbols, wrongSyntax, noRoots, unknownError
   }
 
   enum OutputMode: CaseIterable {
@@ -38,11 +39,12 @@ class ComputorV1 {
     [.emptyInput : "Empty input? Really?",
     .noX : "Have you forgotten x?? For that matter, x is R, I guess",
     .noEqualitySign: "Have you forgotten equality sign(=)?? For that matter, x is R, I guess",
+    .manyEqualitySigns: "Waat?) What's up with =)??",
     .floatingPoint : "Sorry! Dot can be only used for floating point numbers. Yeah, I know, it sucks(",
     .badSymbols : "Hey! '\(badChars)' can't really be used here",
     .wrongSyntax : "Hey! Wrong syntax ain't really tolerated, ya know",
     .noRoots: "No money no honey",
-    .unknownError: "Come on, man!"]
+    .unknownError: "Come on!"]
   }
 
   func parseArgs() {
@@ -74,6 +76,8 @@ class ComputorV1 {
         printErrorAnswer(errorDict[.noX]!)
       } catch ProcessingError.noEqualitySign {
         printErrorAnswer(errorDict[.noEqualitySign]!)
+      } catch ProcessingError.manyEqualitySigns {
+        printErrorAnswer(errorDict[.manyEqualitySigns]!)
       } catch ProcessingError.wrongSyntax {
         printErrorAnswer(errorDict[.wrongSyntax]!)
       } catch {
@@ -133,6 +137,7 @@ class ComputorV1 {
   //  let noX = !input.contains("x")
     let noEqualitySign = !input.contains("=")
     if noEqualitySign { throw ProcessingError.noEqualitySign }
+    else if input.filter({ $0 == "=" }).count > 1 { throw ProcessingError.manyEqualitySigns }
   //  if noX && numChars.count == notNumChars.count + 1 { throw ProcessingError.noX }
   //  else if noX { throw ProcessingError.unknownError }
   }
