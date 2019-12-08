@@ -17,6 +17,7 @@ class ComputorV1 {
   private lazy var allowedChars = "+-=*^\(digitsStr)x. "
   private var badChars = ""
   private var polynom: Polynom!
+  private var discr: Double!
   
   enum Coefs: Int, CaseIterable {
     case a = 2, b = 1, c = 0
@@ -327,7 +328,7 @@ class ComputorV1 {
 
   private func solveByDiscr(a: Double, b: Double, c: Double) -> (x1: Double, x2: Double)? {
     
-    let discr = pow(b, 2) - 4 * a * c
+    discr = pow(b, 2) - 4 * a * c
     
     if discr < 0 { printExceptionalAnswer("No money no honey"); return nil }
     let discrSqrt = sqrt(discr)
@@ -353,7 +354,7 @@ class ComputorV1 {
 
   private func printDelimeter() {
     
-    let len = 30
+    let len = 40
     for ind in 0...len { print("\(ind == len ? ">\n\n" : "=")", terminator: "") }
   }
 
@@ -432,7 +433,7 @@ class ComputorV1 {
     print("""
       Polynom #\(currentArgInd + 1): '\(currentArg)'
       \(toPrintStandardView ? "Standard view: \(getStandardPolView())\n" : "")\
-      \(!toPrintSolution ? "\n\t" : "Solution:\n\t")\(answer)
+      \(!toPrintSolution ? "\n\t" : "Solution:\n\tDiscriminant = \(discr!.toString), =>\n\t")\(answer)
       """)
     
     if toPrintDelim && currentArgInd == argsArr.count - 1 { printDelimeter() }
