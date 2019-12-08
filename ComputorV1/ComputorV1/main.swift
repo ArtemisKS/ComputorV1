@@ -14,7 +14,8 @@ class ComputorV1 {
   private var currentArgInd = 0
   private var currentArg = ""
   private let digitsStr = "0123456789"
-  private lazy var allowedChars = "+-=*^\(digitsStr)x. "
+  private let vars = "xX"
+  private lazy var allowedChars = "+-=*^\(digitsStr)\(vars). "
   private var badChars = ""
   private var polynom: Polynom!
   private var discr: Double!
@@ -189,7 +190,7 @@ class ComputorV1 {
   //    print("parsedToken: \(parsedToken)")
   //    print("tokens1: \(tokens)")
       if tokens.isEmpty {
-        if parsedToken.polynomPiece == "x" {
+        if vars.contains(parsedToken.polynomPiece) {
           return PolynomValue(coef: parsedToken.positive ? 1 : -1, power: 1)
         } else { printErrorAnswer("Come on!"); return nil }
       }
@@ -198,7 +199,7 @@ class ComputorV1 {
       
       var prePowSubToken: String!
       if let ind = piece.firstIndex(of: "^") { prePowSubToken = String(piece[piece.startIndex..<ind]) }
-      else if let ind = piece.firstIndex(of: "x"),
+      else if let ind = piece.firstIndex(where: { self.vars.contains($0) }),
         ind != piece.index(before: piece.endIndex),
         digitsStr.contains(piece[piece.index(after: ind)]) { prePowSubToken = String(piece[piece.startIndex..<ind]) }
       
@@ -209,7 +210,7 @@ class ComputorV1 {
   //      print("powInd: \(powInd), tokens: \(tokens), tokens[\(powInd)]: \(tokens[powInd])")
         pow = tokens.remove(at: powInd)
       } else {
-        pow = piece.contains("x") ? "1" : "0"
+        pow = piece.contains("x") || piece.contains("X") ? "1" : "0"
       }
       
       if let intPow = Int(pow), intPow > 2 { printErrorAnswer("Sorry, power can't be more than 2"); return nil }
